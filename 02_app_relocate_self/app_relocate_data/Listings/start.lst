@@ -1,0 +1,324 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 PRESERVE8                    ; instruct is align
+                                                            ed by 8 bytes 指�
+                                                            �集8字节对齐
+    2 00000000                 THUMB                        ; use Thumb instruc
+                                                            tion set    使用t
+                                                            humb指令集
+    3 00000000         
+    4 00000000                 AREA             RESET, DATA, READONLY ;DATA定�
+                                                            ��数据段，READO
+                                                            NLY只读
+    5 00000000                 EXPORT           __Vectors
+    6 00000000         
+    7 00000000 0800B000 
+                       CODE_START_ADDR
+                               EQU              0x800B000
+    8 00000000         
+    9 00000000 20010000 
+                       __Vectors
+                               DCD              0x20000000+0x10000 ; CPU自动�
+                                                            ��改处的值设�
+                                                            �为栈顶 Top of S
+                                                            tack
+   10 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   11 00000008         
+   12 00000008                 AREA             |.text|, CODE, READONLY ; CODE�
+                                                            ��示定义代码�
+                                                            �，READONLY只读
+   13 00000000         ; Reset handler
+   14 00000000         Reset_Handler
+                               PROC                         ; 子程序开始�
+                                                            �志
+   15 00000000                 EXPORT           Reset_Handler             [WEAK
+] 
+                                                            ; 导出Reset_Handl
+                                                            er全局可见以�
+                                                            �弱定义
+   16 00000000                 IMPORT           xmain       ; 导入main，类�
+                                                            ��C语言的extern 
+                                                            main，声明main�
+                                                            �外部定义
+   17 00000000 F8DF D030       LDR              sp, = (0x20000000+0x10000) ; �
+                                                            �置栈,只有设�
+                                                            �了栈才能跳到
+                                                            C语言的世界执
+                                                            行
+   18 00000004         
+   19 00000004         ;LDR R3, = relocate_data
+   20 00000004         ;BX  R3
+   21 00000004         
+   22 00000004         ;LDR R3,= clear_bss
+   23 00000004         ;BX  R3
+   24 00000004         
+   25 00000004 4811            LDR              R0, = |Load$$RW_IRAM1$$RW$$Base
+|
+   26 00000006 4912            LDR              R1, = |Image$$RW_IRAM1$$RW$$Bas
+e|
+   27 00000008 4A12            LDR              R2, = |Image$$RW_IRAM1$$RW$$Len
+gth|
+   28 0000000A         
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   29 0000000A F7FF FFFE       BL               c_relocate_data
+   30 0000000E         
+   31 0000000E 4812            LDR              R0, = |Image$$RW_IRAM1$$ZI$$Bas
+e|
+   32 00000010 4912            LDR              R1, = |Image$$RW_IRAM1$$ZI$$Len
+gth|
+   33 00000012 F04F 0200       MOV              R2 , #0
+   34 00000016 F7FF FFFE       BL               c_clear_bss
+   35 0000001A         
+   36 0000001A F7FF FFFE       BL               xmain
+   37 0000001E         
+   38 0000001E         
+   39 0000001E                 ENDP                         ; 子程序结束�
+                                                            �志
+   40 0000001E         ;重定位数据段      
+   41 0000001E         relocate_data
+                               PROC
+   42 0000001E         ;EXPORT  relocate_data 
+   43 0000001E                 IMPORT           c_relocate_data
+   44 0000001E                 IMPORT           |Image$$RW_IRAM1$$RW$$Base| ; �
+                                                            ��据段的加载�
+                                                            �始地址(源)
+   45 0000001E                 IMPORT           |Image$$RW_IRAM1$$RW$$Length| ;
+                                                             数据段的长度
+                                                            (长度)  
+   46 0000001E         
+   47 0000001E         ;IMPORT |Image$$ER_IROM1$$Length|
+   48 0000001E         ;IMPORT |Image$$ER_IROM1$$Base|
+   49 0000001E                 IMPORT           |Load$$RW_IRAM1$$RW$$Base| ; �
+                                                            �载于RW段的起�
+                                                            ��地址
+   50 0000001E         
+   51 0000001E 480B            LDR              R0, = |Load$$RW_IRAM1$$RW$$Base
+|
+   52 00000020 490B            LDR              R1, = |Image$$RW_IRAM1$$RW$$Bas
+e|
+   53 00000022 4A0C            LDR              R2, = |Image$$RW_IRAM1$$RW$$Len
+gth|
+   54 00000024         
+   55 00000024 F7FF FFFE       BL               c_relocate_data
+   56 00000028         
+   57 00000028         ;BX LR
+   58 00000028         
+   59 00000028                 ENDP
+   60 00000028         ; 清除bss段      
+   61 00000028         clear_bss
+                               PROC
+   62 00000028                 IMPORT           |Image$$RW_IRAM1$$ZI$$Base| ; Z
+                                                            I段的链接起始
+                                                            地址
+   63 00000028                 IMPORT           |Image$$RW_IRAM1$$ZI$$Length| 
+                                                            ; ZI段的长度
+   64 00000028                 IMPORT           c_clear_bss
+   65 00000028         
+   66 00000028 480B            LDR              R0, = |Image$$RW_IRAM1$$ZI$$Bas
+e|
+   67 0000002A 490C            LDR              R1, = |Image$$RW_IRAM1$$ZI$$Len
+gth|
+   68 0000002C F04F 0200       MOV              R2 , #0
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   69 00000030         
+   70 00000030 F7FF FFFE       BL               c_clear_bss
+   71 00000034         
+   72 00000034         ;BX LR
+   73 00000034         
+   74 00000034                 ENDP
+   75 00000034         
+   76 00000034                 END                          ;汇编文件结束
+                                                            
+              20010000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\start.d -o.\objects\start.o -I.\RTE\_01App -IC:\Users\gu
+angjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include -IC:\Kei
+l_v5\ARM\CMSIS\Include --predefine="__UVISION_VERSION SETA 527" --predefine="ST
+M32F10X_HD SETA 1" --list=.\listings\start.lst startup\start.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 4 in file startup\start.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 9 in file startup\start.s
+   Uses
+      At line 5 in file startup\start.s
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 12 in file startup\start.s
+   Uses
+      None
+Comment: .text unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 14 in file startup\start.s
+   Uses
+      At line 10 in file startup\start.s
+      At line 15 in file startup\start.s
+
+clear_bss 00000028
+
+Symbol: clear_bss
+   Definitions
+      At line 61 in file startup\start.s
+   Uses
+      None
+Comment: clear_bss unused
+relocate_data 0000001E
+
+Symbol: relocate_data
+   Definitions
+      At line 41 in file startup\start.s
+   Uses
+      None
+Comment: relocate_data unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+CODE_START_ADDR 0800B000
+
+Symbol: CODE_START_ADDR
+   Definitions
+      At line 7 in file startup\start.s
+   Uses
+      None
+Comment: CODE_START_ADDR unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Image$$RW_IRAM1$$RW$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Base
+   Definitions
+      At line 44 in file startup\start.s
+   Uses
+      At line 26 in file startup\start.s
+      At line 52 in file startup\start.s
+
+Image$$RW_IRAM1$$RW$$Length 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Length
+   Definitions
+      At line 45 in file startup\start.s
+   Uses
+      At line 27 in file startup\start.s
+      At line 53 in file startup\start.s
+
+Image$$RW_IRAM1$$ZI$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Base
+   Definitions
+      At line 62 in file startup\start.s
+   Uses
+      At line 31 in file startup\start.s
+      At line 66 in file startup\start.s
+
+Image$$RW_IRAM1$$ZI$$Length 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Length
+   Definitions
+      At line 63 in file startup\start.s
+   Uses
+      At line 32 in file startup\start.s
+      At line 67 in file startup\start.s
+
+Load$$RW_IRAM1$$RW$$Base 00000000
+
+Symbol: Load$$RW_IRAM1$$RW$$Base
+   Definitions
+      At line 49 in file startup\start.s
+   Uses
+      At line 25 in file startup\start.s
+      At line 51 in file startup\start.s
+
+c_clear_bss 00000000
+
+Symbol: c_clear_bss
+   Definitions
+      At line 64 in file startup\start.s
+   Uses
+      At line 34 in file startup\start.s
+      At line 70 in file startup\start.s
+
+c_relocate_data 00000000
+
+Symbol: c_relocate_data
+   Definitions
+      At line 43 in file startup\start.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+External symbols
+
+   Uses
+      At line 29 in file startup\start.s
+      At line 55 in file startup\start.s
+
+xmain 00000000
+
+Symbol: xmain
+   Definitions
+      At line 16 in file startup\start.s
+   Uses
+      At line 36 in file startup\start.s
+Comment: xmain used once
+8 symbols
+349 symbols in table

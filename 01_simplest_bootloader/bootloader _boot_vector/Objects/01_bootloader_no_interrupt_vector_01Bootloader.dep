@@ -1,0 +1,6 @@
+Dependencies for Project '01_bootloader_no_interrupt_vector', Target '01Bootloader': (DO NOT MODIFY !)
+F (.\app\main.c)(0x62D024E4)(--c99 -c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I .\drv -I .\drv\led -I .\drv\usart-I.\RTE\_01Bootloader-IC:\Users\guangjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="527" -DSTM32F10X_HD-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (.\drv\usart\usart.h)(0x62C3F6F6)
+F (.\drv\usart\usart.c)(0x62C6780C)(--c99 -c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I .\drv -I .\drv\led -I .\drv\usart-I.\RTE\_01Bootloader-IC:\Users\guangjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="527" -DSTM32F10X_HD-o .\objects\usart.o --omf_browse .\objects\usart.crf --depend .\objects\usart.d)
+I (drv\usart\usart.h)(0x62C3F6F6)
+F (.\startup\start.s)(0x62D02DC8)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_01Bootloader-IC:\Users\guangjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 527" --pd "STM32F10X_HD SETA 1"--list .\listings\start.lst --xref -o .\objects\start.o --depend .\objects\start.d)

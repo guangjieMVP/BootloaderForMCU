@@ -1,0 +1,152 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 PRESERVE8                    ; instruct is align
+                                                            ed by 8 bytes 指�
+                                                            �集8字节对齐
+    2 00000000                 THUMB                        ; use Thumb instruc
+                                                            tion set    使用t
+                                                            humb指令集
+    3 00000000         
+    4 00000000                 AREA             RESET, DATA, READONLY ;DATA定�
+                                                            ��数据段，READO
+                                                            NLY只读
+    5 00000000                 EXPORT           __Vectors
+    6 00000000         
+    7 00000000 00000000 
+                       __Vectors
+                               DCD              0           ; CPU自动将该�
+                                                            �的值设置给sp�
+                                                            ��Top of Stack
+    8 00000004 00000000        DCD              Reset_Handler ; Reset Handler �
+                                                            ��令地址，CPU�
+                                                            �先执行此句
+    9 00000008         
+   10 00000008                 AREA             |.text|, CODE, READONLY ; CODE�
+                                                            ��示定义代码�
+                                                            �，READONLY只读
+   11 00000000         ; Reset handler
+   12 00000000         Reset_Handler
+                               PROC                         ; 子程序开始�
+                                                            �志
+   13 00000000                 EXPORT           Reset_Handler             [WEAK
+] 
+                                                            ; 导出Reset_Handl
+                                                            er全局可见以�
+                                                            �弱定义
+   14 00000000                 IMPORT           main        ; 导入main，类�
+                                                            ��C语言的extern 
+                                                            main，声明main�
+                                                            �外部定义
+   15 00000000         
+   16 00000000 F8DF D008       LDR              sp, = (0x20000000+0x10000) ; �
+                                                            �动设置栈,只�
+                                                            �设置了栈才能
+                                                            跳到C语言的世
+                                                            界执行
+   17 00000004 F7FF FFFE       BL               main        ; 跳到C语言世�
+                                                            ��执行
+   18 00000008         
+   19 00000008                 ENDP                         ; 子程序结束�
+                                                            �志
+   20 00000008         
+   21 00000008         boot_app
+                               PROC                         ; 汇编标号即�
+                                                            �数名或者说函
+                                                            数地址
+   22 00000008                 EXPORT           boot_app
+   23 00000008         
+   24 00000008         ; LDR     sp, = R0  ;  
+   25 00000008 4685            mov              sp, R0
+   26 0000000A 4708            BX               R1          ; 跳去执行APP
+   27 0000000C         
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   28 0000000C                 ENDP
+   29 0000000C         
+   30 0000000C                 END                          ;汇编文件结束
+                                                            
+              20010000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\start.d -o.\objects\start.o -IC:\Users\Administrator\App
+Data\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include -IC:\Keil_v5\ARM\C
+MSIS\Include --predefine="__UVISION_VERSION SETA 533" --predefine="STM32F10X_HD
+ SETA 1" --list=.\listings\start.lst startup\start.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 4 in file startup\start.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 7 in file startup\start.s
+   Uses
+      At line 5 in file startup\start.s
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 10 in file startup\start.s
+   Uses
+      None
+Comment: .text unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 12 in file startup\start.s
+   Uses
+      At line 8 in file startup\start.s
+      At line 13 in file startup\start.s
+
+boot_app 00000008
+
+Symbol: boot_app
+   Definitions
+      At line 21 in file startup\start.s
+   Uses
+      At line 22 in file startup\start.s
+Comment: boot_app used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 14 in file startup\start.s
+   Uses
+      At line 17 in file startup\start.s
+Comment: main used once
+1 symbol
+340 symbols in table

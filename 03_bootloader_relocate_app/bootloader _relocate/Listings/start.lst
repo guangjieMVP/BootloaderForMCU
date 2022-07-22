@@ -1,0 +1,177 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 PRESERVE8                    ; instruct is align
+                                                            ed by 8 bytes 指�
+                                                            �集8字节对齐
+    2 00000000                 THUMB                        ; use Thumb instruc
+                                                            tion set    使用t
+                                                            humb指令集
+    3 00000000         
+    4 00000000                 AREA             RESET, DATA, READONLY ;DATA定�
+                                                            ��数据段，READO
+                                                            NLY只读
+    5 00000000                 EXPORT           __Vectors
+    6 00000000         
+    7 00000000 E000ED08 
+                       VECTOR_REG_ADD
+                               EQU              0xE000ED08
+    8 00000000         
+    9 00000000 00000000 
+                       __Vectors
+                               DCD              0           ; CPU自动将该�
+                                                            �的值设置给sp�
+                                                            ��Top of Stack
+   10 00000004 00000000        DCD              Reset_Handler ; Reset Handler �
+                                                            ��令地址，CPU�
+                                                            �先执行此句
+   11 00000008         
+   12 00000008                 AREA             |.text|, CODE, READONLY ; CODE�
+                                                            ��示定义代码�
+                                                            �，READONLY只读
+   13 00000000         ; Reset handler
+   14 00000000         Reset_Handler
+                               PROC                         ; 子程序开始�
+                                                            �志
+   15 00000000                 EXPORT           Reset_Handler             [WEAK
+] 
+                                                            ; 
+   16 00000000                 IMPORT           main        ; 
+   17 00000000         
+   18 00000000 F8DF D010       LDR              sp, = (0x20000000+0x10000) ; 
+   19 00000004         
+   20 00000004 F7FF FFFE       BL               main        ; 跳到C语言世�
+                                                            ��执行
+   21 00000008         
+   22 00000008                 ENDP                         ;
+   23 00000008         
+   24 00000008         boot_app
+                               PROC                         ; 
+   25 00000008                 EXPORT           boot_app
+   26 00000008         
+   27 00000008 4903            LDR              R1, = VECTOR_REG_ADD
+   28 0000000A 6008            STR              R0, [R1]    ; 向中断向量�
+                                                            �存器写入程序
+                                                            链接地址0x800B0
+                                                            00
+   29 0000000C         
+   30 0000000C F8D0 D000       LDR              sp, [R0]    ; 取0x800B000地�
+                                                            �处的值写入sp�
+                                                            ��设置栈
+   31 00000010         
+   32 00000010         ;LDR R3, [R1]
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   33 00000010         
+   34 00000010 6842            LDR              R2, [R0, #4] ;  0x20000000 + 4 
+                                                            = 0x20000004,取出
+                                                            0x20000004地址处
+                                                            的值赋值给R2
+   35 00000012         
+   36 00000012         ;ADD R2, R0, #9
+   37 00000012         
+   38 00000012 4710            BX               R2          ; 跳去执行APP
+   39 00000014         
+   40 00000014                 ENDP
+   41 00000014         
+   42 00000014                 END                          ;汇编文件结
+              20010000 
+              E000ED08 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\start.d -o.\objects\start.o -I.\RTE\_01Bootloader -IC:\U
+sers\guangjie\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include -
+IC:\Keil_v5\ARM\CMSIS\Include --predefine="__UVISION_VERSION SETA 527" --predef
+ine="STM32F10X_HD SETA 1" --list=.\listings\start.lst startup\start.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 4 in file startup\start.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 9 in file startup\start.s
+   Uses
+      At line 5 in file startup\start.s
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 12 in file startup\start.s
+   Uses
+      None
+Comment: .text unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 14 in file startup\start.s
+   Uses
+      At line 10 in file startup\start.s
+      At line 15 in file startup\start.s
+
+boot_app 00000008
+
+Symbol: boot_app
+   Definitions
+      At line 24 in file startup\start.s
+   Uses
+      At line 25 in file startup\start.s
+Comment: boot_app used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+VECTOR_REG_ADD E000ED08
+
+Symbol: VECTOR_REG_ADD
+   Definitions
+      At line 7 in file startup\start.s
+   Uses
+      At line 27 in file startup\start.s
+Comment: VECTOR_REG_ADD used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 16 in file startup\start.s
+   Uses
+      At line 20 in file startup\start.s
+Comment: main used once
+1 symbol
+341 symbols in table
